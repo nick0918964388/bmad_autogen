@@ -17,6 +17,12 @@ RUN apt-get update \
         build-essential \
         libpq-dev \
         curl \
+        gcc \
+        g++ \
+        gfortran \
+        liblapack-dev \
+        libblas-dev \
+        pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # 複製需求文件並安裝 Python 依賴
