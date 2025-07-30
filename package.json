@@ -1,0 +1,30 @@
+{
+  "name": "smart-assistant-app",
+  "version": "1.0.0",
+  "description": "智能助理應用程式 - 基於 AutoGen 的多代理智能體系統",
+  "private": true,
+  "packageManager": "pnpm@8.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "pnpm run --parallel dev",
+    "build": "pnpm run --recursive build",
+    "test": "pnpm run --recursive test",
+    "lint": "pnpm run --recursive lint",
+    "typecheck": "pnpm run --recursive typecheck",
+    "clean": "pnpm run --recursive clean",
+    "docker:up": "docker-compose -f infrastructure/docker-compose.yml up",
+    "docker:down": "docker-compose -f infrastructure/docker-compose.yml down",
+    "docker:build": "docker-compose -f infrastructure/docker-compose.yml build"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

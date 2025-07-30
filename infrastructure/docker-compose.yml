@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # 前端服務 - React + Mantine + Vite
+  frontend:
+    build:
+      context: ../apps/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../apps/frontend:/app
+      - ../packages/shared-types:/app/packages/shared-types
+      - /app/node_modules  # 避免本地 node_modules 覆蓋容器內的
+    environment:
+      - VITE_BACKEND_API_URL=http://localhost:8000/api
+      - VITE_NODE_ENV=development
+    depends_on:
+      - backend
+    networks:
+      - smart-assistant-network
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+  # 後端服務 - FastAPI + Python
+  backend:
+    build:
+      context: ../apps/backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../apps/backend:/app
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - HOST=0.0.0.0
+      - PORT=8000
+      - OLLAMA_API_BASE_URL=http://ollama:11434
+      - OLLAMA_EMBEDDING_MODEL=all-minilm:l6-v2
+    networks:
+      - smart-assistant-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# 網路配置
+networks:
+  smart-assistant-network:
+    driver: bridge
+    name: smart-assistant-network
+
+# 備註：
+# - 目前配置僅包含前後端服務，用於基本的 Docker Compose 環境建置
+# - 未來將加入 PostgreSQL、Redis、Ollama 等服務
+# - Volume mount 支援開發模式的熱重載
+# - 自定義網路允許服務間通訊
