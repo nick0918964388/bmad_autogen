@@ -9,7 +9,9 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./apps/frontend:/app
+      - ./apps/frontend/src:/app/src  # 只映射源碼目錄
+      - ./apps/frontend/index.html:/app/index.html  # 映射入口文件
+      - ./apps/frontend/vite.config.ts:/app/vite.config.ts  # 映射配置文件
       - ./packages/shared-types:/app/packages/shared-types
       - /app/node_modules  # 避免本地 node_modules 覆蓋容器內的
     environment:
@@ -31,7 +33,7 @@ services:
     ports:
       - "8010:8000"
     volumes:
-      - ./apps/backend:/app
+      - ./apps/backend/src:/app/src  # 只映射源碼目錄，保留已安裝的套件
       - vector_db_data:/app/data/vector_db  # 向量資料庫儲存
     environment:
       - ENVIRONMENT=development
