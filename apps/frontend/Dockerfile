@@ -4,16 +4,22 @@
 FROM node:18-alpine
 
 # 安裝 pnpm
-RUN npm install -g pnpm@8
+#RUN npm install -g pnpm@8
 
 # 設定工作目錄
 WORKDIR /app
 
 # 複製 package 文件
-COPY package.json pnpm-lock.yaml* ./
+#COPY package.json pnpm-lock.yaml* ./
+
+# 複製 package 文件
+COPY package.json package-lock.json* ./
 
 # 安裝依賴
-RUN pnpm install
+#RUN pnpm install
+
+# 使用 npm 安裝依賴
+RUN npm ci
 
 # 複製源碼
 COPY . .
@@ -22,4 +28,5 @@ COPY . .
 EXPOSE 3000
 
 # 開發模式啟動命令
-CMD ["pnpm", "dev", "--host", "0.0.0.0"]
+#CMD ["pnpm", "dev", "--host", "0.0.0.0"]
+CMD ["npm", "run", "dev","--host","0.0.0.0"]
